@@ -6,15 +6,22 @@ class Register extends React.Component {
   constructor() {
     super(...arguments)
     this.state = {
+      user: '',
+      pwd: '',
+      repeatpwd: '',
       type: 'genius'
     }
 
   }
 
-  onChange(value) {
+  handleChange(key, val) {
     this.setState({
-      type: value
+      [key]: val
     })
+  }
+
+  handleRegister = () => {
+    console.log(this.state)
   }
 
   render() {
@@ -23,20 +30,21 @@ class Register extends React.Component {
       <div>
         <Logo></Logo>
         <List>
-          <InputItem>用户名</InputItem>
-          <InputItem>密码</InputItem>
-          <InputItem>确认密码</InputItem>
-          <RadioItem checked={this.state.type == 'genius'} onChange={this.onChange.bind(this, 'genius')}>
+          <InputItem onChange={v => this.handleChange('user', v)}>用户名</InputItem>
+          <InputItem onChange={v => this.handleChange('pwd', v)} type='password'>密码</InputItem>
+          <InputItem onChange={v => this.handleChange('repeatpwd', v)} type='password'> 确认密码</InputItem>
+          <RadioItem checked={this.state.type === 'genius'} onChange={v => this.handleChange('type', 'genius')}>
             牛人
           </RadioItem>
-          <RadioItem checked={this.state.type == 'boss'} onChange={this.onChange.bind(this, 'boss')}>
+          <RadioItem checked={this.state.type === 'boss'} onChange={v => this.handleChange('type', 'boss')}>
             BOSS
           </RadioItem>
         </List>
         <WhiteSpace/>
         <WingBlank>
-          <Button type="primary">注册</Button>
+          <Button type="primary" onClick={this.handleRegister}>注册</Button>
         </WingBlank>
+        <WhiteSpace/>
       </div>
     )
   }
