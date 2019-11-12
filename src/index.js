@@ -10,6 +10,7 @@ import Register from './container/register/register'
 import AuthRoute from './component/authroute/authroute'
 import reducers from './reducer'
 import './config'
+import './index.css'
 
 //第二个参数是设置用于配置chrome调试工具使用Redux Devtools
 const store = createStore(reducers, compose(
