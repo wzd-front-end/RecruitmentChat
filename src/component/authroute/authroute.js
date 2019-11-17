@@ -1,8 +1,9 @@
 import React from 'react'
 import axios from 'axios'
-import {withRouter} from 'react-router-dom'
-import {loadData} from '../../redux/user.redux'
-import {connect} from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { loadData } from '../../redux/user.redux'
+import { connect } from 'react-redux'
+
 
 
 //因为AuthRoute并不是路由组件，所以他没有操纵路由得方法，即我们直接访问this.props.history是会得到undefault
@@ -11,7 +12,7 @@ import {connect} from 'react-redux'
 @withRouter
 @connect(
   null,
-  {loadData}
+  { loadData }
 )
 
 class AuthRoute extends React.Component {

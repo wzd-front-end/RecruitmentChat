@@ -6,7 +6,7 @@ const userRouter = require('./user')
 
 const app = express()
 //用于解析cookie
-app.use(cookieParser())
+app.use(cookieParser('wzd3830'))
 //用于解析body中所传数据
 app.use(bodyParser.json())
 app.use('/user', userRouter)
