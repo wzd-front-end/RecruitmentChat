@@ -1,8 +1,13 @@
 import React from 'react'
 import { Grid, List, Flex } from 'antd-mobile'
+import PropTypes from 'prop-types'
 
 
 class AvatarSelector extends React.Component {
+  static PropTypes = {
+    selectAvatar: PropTypes.func
+  }
+
   constructor() {
     super(...arguments)
     this.state = {}
