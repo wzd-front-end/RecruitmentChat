@@ -7,8 +7,10 @@ const User = model.getModel('user')
 const _filter = { 'pwd': 0, '__v': 0 }
 
 Router.get('/list', function (req, res) {
-  User.find({}, function (err, doc) {
-    return res.json(doc)
+  // 路由拼接问号传参使用query获取，json传参通过body获取
+  const {type} = req.query
+  User.find({type}, function (err, doc) {
+    return res.json({code: 0, data: doc})
   })
 })
 
@@ -33,7 +35,7 @@ Router.post('/login', function (req, res) {
     if (!doc) {
       return res.json({ code: 1, msg: '用户名或者密码错误' })
     }
-    res.cookie('userid', doc._id, { httpOnly: true, signed: true, maxAge: 10 * 60 * 1000 })
+    res.cookie('userid', doc._id, { httpOnly: true, signed: true, maxAge: 60 * 60 * 1000 })
     return res.json({ code: 0, data: doc })
   })
 })
@@ -51,7 +53,7 @@ Router.post('/register', function (req, res) {
         return res.json({ code: 1, msg: '后端出错了' })
       }
       const { user, type, _id } = d
-      res.cookie('userid', _id, { httpOnly: true, signed: true, maxAge: 10 * 60 * 1000 })
+      res.cookie('userid', _id, { httpOnly: true, signed: true, maxAge: 60 * 60 * 1000 })
       return res.json({ code: 0, data: { user, type, _id } })
     })
   })
