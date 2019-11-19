@@ -15,6 +15,10 @@
     width: 100%;
 }
 
+.am-tab-bar {
+    height: auto !important;
+}
+
 .page-content {
     padding: 45px 5px;
 }

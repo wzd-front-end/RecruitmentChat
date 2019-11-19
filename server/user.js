@@ -35,7 +35,7 @@ Router.post('/login', function (req, res) {
     if (!doc) {
       return res.json({ code: 1, msg: '用户名或者密码错误' })
     }
-    res.cookie('userid', doc._id, { httpOnly: true, signed: true, maxAge: 60 * 60 * 1000 })
+    res.cookie('userid', doc._id, { signed: true, maxAge: 60 * 60 * 1000 })
     return res.json({ code: 0, data: doc })
   })
 })
@@ -53,7 +53,7 @@ Router.post('/register', function (req, res) {
         return res.json({ code: 1, msg: '后端出错了' })
       }
       const { user, type, _id } = d
-      res.cookie('userid', _id, { httpOnly: true, signed: true, maxAge: 60 * 60 * 1000 })
+      res.cookie('userid', _id, { signed: true, maxAge: 60 * 60 * 1000 })
       return res.json({ code: 0, data: { user, type, _id } })
     })
   })
