@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {getUserList} from "../../redux/chatuser.redux";
 import UserCard from "../usercard/usercard"
 
-
 @connect(state => state.chatuser,
   (dispatch) => {
     return {
@@ -14,13 +13,13 @@ import UserCard from "../usercard/usercard"
   }
 )
 
-class Boss extends React.Component {
+class Genius extends React.Component {
   constructor() {
     super(...arguments)
   }
 
   componentDidMount() {
-    this.props.getUserList('genius')
+    this.props.getUserList('boss')
   }
 
   render() {
@@ -30,4 +29,4 @@ class Boss extends React.Component {
   }
 }
 
-export default Boss
+export default Genius

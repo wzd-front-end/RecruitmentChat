@@ -4,10 +4,7 @@ import {NavBar} from 'antd-mobile'
 import NavLinkBar from '../navlink/navlink'
 import {Switch, Route} from 'react-router-dom'
 import Boss from '../../component/boss/boss'
-
-function Genius() {
-  return <h2>牛人首页</h2>
-}
+import Genius from '../../component/genius/genius'
 
 function Msg() {
   return <h2>消息列表</h2>
@@ -30,7 +27,7 @@ class DashBoard extends React.Component {
         text: '牛人',
         icon: 'job',
         title: '牛人列表',
-        component: Genius,
+        component: Boss,
         hide: user.type === 'genius'
       },
       {
@@ -38,7 +35,7 @@ class DashBoard extends React.Component {
         text: 'boss',
         icon: 'boss',
         title: 'Boss列表',
-        component: Boss,
+        component: Genius,
         hide: user.type === 'boss'
       },
       {
