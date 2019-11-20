@@ -32,7 +32,6 @@ class Login extends React.Component {
   }
 
   register() {
-    console.dir(this.props)
     this.props.history.push('/register')
   }
   render() {
