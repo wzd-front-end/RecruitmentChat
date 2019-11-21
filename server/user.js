@@ -4,13 +4,24 @@ const utils = require('utility')
 const Router = express.Router()
 const model = require('./model')
 const User = model.getModel('user')
+const Chat = model.getModel('chat')
 const _filter = { 'pwd': 0, '__v': 0 }
 
 Router.get('/list', function (req, res) {
   // 路由拼接问号传参使用query获取，json传参通过body获取
-  const {type} = req.query
-  User.find({type}, function (err, doc) {
-    return res.json({code: 0, data: doc})
+  const { type } = req.query
+  User.find({ type }, function (err, doc) {
+    return res.json({ code: 0, data: doc })
+  })
+})
+
+Router.get('getmsglist', function (req, res) {
+  const { userid } = req.signedCookies
+  // {'$or': [{form:user, to:user}]}
+  Chat.find({}, function (err, doc) {
+    if (!err) {
+      return res.json({ code: 0, msgs: doc })
+    }
   })
 })
 
@@ -25,7 +36,7 @@ Router.post('/update', function (req, res) {
       user: doc.user,
       type: doc.type
     }, body)
-    return res.json({code: 0, data})
+    return res.json({ code: 0, data })
   })
 })
 
