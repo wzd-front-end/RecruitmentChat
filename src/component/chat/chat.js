@@ -1,7 +1,7 @@
 import React from 'react'
 import io from 'socket.io-client'
 import { List, InputItem } from 'antd-mobile'
-const socket = io('ws://localhost:9093 ')
+const socket = io('ws://localhost:9093')
 
 class Chat extends React.Component {
   constructor() {
@@ -12,7 +12,7 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
-   
+
   }
 
   handleSubmit() {

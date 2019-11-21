@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 
 const app = express()
-const server = require('http').Server(app)
+const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 
 io.on('connection', function(socket) {
