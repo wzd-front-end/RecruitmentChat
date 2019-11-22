@@ -15,7 +15,7 @@ Router.get('/list', function (req, res) {
   })
 })
 
-Router.get('getmsglist', function (req, res) {
+Router.get('/getmsglist', function (req, res) {
   const { userid } = req.signedCookies
   // {'$or': [{form:user, to:user}]}
   Chat.find({}, function (err, doc) {
