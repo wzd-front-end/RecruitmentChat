@@ -6,6 +6,9 @@ const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 
+const model = require('./model')
+const Chat = model.getModel('chat')
+
 io.on('connection', function (socket) {
   console.log('user login')
   // 注意这里使用socket,表示当前连接的请求，io是全局二点请求
@@ -13,7 +16,7 @@ io.on('connection', function (socket) {
     const {from, to, msg} = data
     const chatid = [from, to].sort().join('_')
     Chat.create({chatid, from, to, content: msg}, function (err, doc) {
-      io.emit('recvmsg', Object.assign({}, doc))
+      io.emit('recvmsg', Object.assign({}, doc._doc))
     })
   })
 })
