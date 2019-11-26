@@ -38,7 +38,60 @@
 
 .stick-footer {
     z-index: 10;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
 }
+
+.nav-block {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+}
+
+.chat-block {
+    padding: 55px 0 45px;
+}
+
+.chat-message {
+    display: flex;
+    padding: 0 15px;
+    margin-bottom: 10px;
+}
+
+.chat-message .avatar-block {
+    width: 33px;
+    height: 33px;
+    overflow: hidden;
+}
+
+.chat-message .avatar-block .avatar-img {
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+}
+
+.chat-message .message-content {
+    flex: 1;
+    margin-right: 10px;
+    margin-left: 10px;
+    display: flex;
+}
+
+.chat-message .bubble-left {
+    justify-content: flex-start;
+}
+
+.chat-message .bubble-right {
+    justify-content: flex-end;
+}
+
+.chat-message .message-content .bubble-block {
+    background: #ffffff;
+    padding: 8px 12px;
+    border: 1px solid #979797;
+    border-radius: 8px;
+    line-height: 22px;
+}
+

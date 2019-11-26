@@ -2,7 +2,7 @@ import React from 'react'
 import io from 'socket.io-client'
 import {List, InputItem, NavBar, Icon} from 'antd-mobile'
 import {connect} from 'react-redux'
-import {sendMsg, getMsgList, recvMsg} from '../../redux/chat.redux.js'
+import {sendMsg, getMsgList, recvMsg, changeScroll} from '../../redux/chat.redux.js'
 import {getChatId} from '../../unit'
 
 const socket = io('ws://localhost:9093')
@@ -12,7 +12,8 @@ const socket = io('ws://localhost:9093')
   {
     sendMsg,
     getMsgList,
-    recvMsg
+    recvMsg,
+    changeScroll
   }
 )
 class Chat extends React.Component {
@@ -26,6 +27,7 @@ class Chat extends React.Component {
 
   componentDidMount() {
     // 加多此处判断是为了防止多次绑定和获取数据，且在此处需要做这一步是因为除了外面需要获取未读数外，里面也需要获取初始值
+    this.props.changeScroll(1)
     if (!this.props.chat.chatmsg.length) {
       this.props.getMsgList()
       this.props.recvMsg()
@@ -54,33 +56,43 @@ class Chat extends React.Component {
 
     return (
       <div id='chat-page'>
-        <NavBar
-          mode='dark'
-          icon={<Icon type='left'/>}
-          onLeftClick={() => {
-            this.props.history.goBack()
-          }}
-        >
-          {users[userid].name}
-        </NavBar>
+        <div className='nav-block'>
+          <NavBar
+            mode='dark'
+            icon={<Icon type='left'/>}
+            onLeftClick={() => {
+              this.props.history.goBack()
+            }}
+          >
+            {users[userid].name}
+          </NavBar>
+        </div>
+        <section className='chat-block'>
 
-        {chatmsgs.map(v => {
-
-          return v.from === userid ? (
-            <List key={v._id}>
-              <Item
-                thumb={require(`../img/${users[v.from].avatar}.jpeg`)}
-              >{v.content}</Item>
-            </List>
-          ) : (
-            <List key={v._id}>
-              <Item
-                extra={<img src={require(`../img/${users[v.from].avatar}.jpeg`)}/>}
-                className='chat-me'
-              >{v.content}</Item>
-            </List>
-          )
-        })}
+          {chatmsgs.map(v => {
+            return v.from === userid ? (
+              <div className='chat-message' key={v._id}>
+                <div className='avatar-block'>
+                  <img className='avatar-img' src={require(`../img/${users[v.from].avatar}.jpeg`)}/>
+                </div>
+                <div className='message-content bubble-left'>
+                  <div className='bubble-block'>{v.content}</div>
+                </div>
+                <div className='avatar-block'></div>
+              </div>
+            ) : (
+              <div className='chat-message' key={v._id}>
+                <div className='avatar-block'></div>
+                <div className='message-content bubble-right'>
+                  <div className='bubble-block'>{v.content}</div>
+                </div>
+                <div className='avatar-block'>
+                  <img className='avatar-img' src={require(`../img/${users[v.from].avatar}.jpeg`)}/>
+                </div>
+              </div>
+            )
+          })}
+        </section>
         <div className='stick-footer'>
           <List>
             <InputItem

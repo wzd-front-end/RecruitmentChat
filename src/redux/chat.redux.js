@@ -10,15 +10,20 @@ const MSG_LIST = 'MSG_LIST'
 const MSG_REVC = 'MSG_REVC'
 // 标识已读
 const MSG_READ = 'MSG_READ'
+// 是否启动接收消息滚动
+const CHANGE_SCROLL = 'CHANGE_SCROLL'
 
 const initState = {
   chatmsg: [],
   users: {},
-  unread: 0
+  unread: 0,
+  canscroll: 1
 }
 
 export function chat(state = initState, action) {
   switch (action.type) {
+    case CHANGE_SCROLL:
+      return {...state, canscroll: action.payload}
     case MSG_LIST:
       return {
         ...state,
@@ -28,7 +33,7 @@ export function chat(state = initState, action) {
       }
     case MSG_REVC:
       const n = action.payload.msg.to === action.payload.userid ? 1 : 0
-      return {...state, chatmsg: [...state.chatmsg, action.payload], unread: (state.unread + n)}
+      return {...state, chatmsg: [...state.chatmsg, action.payload.msg], unread: (state.unread + n)}
     case MSG_READ:
     default:
       return state
@@ -41,6 +46,10 @@ function msgList(msgs, users, userid) {
 
 function msgRecv(msg, userid) {
   return {type: MSG_REVC, payload: {msg, userid}}
+}
+
+export function changeScroll(type) {
+  return {type: CHANGE_SCROLL, payload: type}
 }
 
 export function getMsgList() {
@@ -63,6 +72,12 @@ export function sendMsg({from, to, msg}) {
 export function recvMsg() {
   return (dispatch, getState) => {
     socket.on('recvmsg', function (data) {
+      const canscroll = getState().chat.canscroll
+      if (canscroll) {
+        setTimeout(function () {
+          window.scrollTo(0, document.documentElement.scrollHeight)
+        }, 0)
+      }
       const userid = getState().user._id
       dispatch(msgRecv(data, userid))
     })

@@ -6,7 +6,7 @@ import {Switch, Route} from 'react-router-dom'
 import Boss from '../../component/boss/boss'
 import Genius from '../../component/genius/genius'
 import User from '../../component/user/user'
-import {getMsgList, recvMsg} from '../../redux/chat.redux.js'
+import {getMsgList, recvMsg, changeScroll} from '../../redux/chat.redux.js'
 
 function Msg() {
   return <h2>消息列表</h2>
@@ -16,12 +16,14 @@ function Msg() {
   state => state,
   {
     getMsgList,
-    recvMsg
+    recvMsg,
+    changeScroll
   }
 )
 class DashBoard extends React.Component {
   componentDidMount() {
     // 加多此处判断是为了防止多次绑定和获取数据
+    this.props.changeScroll(0)
     if (this.props.chat.chatmsg.length <= 0) {
       this.props.getMsgList()
       this.props.recvMsg()
