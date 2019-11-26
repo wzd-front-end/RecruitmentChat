@@ -2,14 +2,17 @@ import React from 'react'
 import io from 'socket.io-client'
 import {List, InputItem, NavBar, Icon} from 'antd-mobile'
 import {connect} from 'react-redux'
-import {sendMsg} from '../../redux/chat.redux.js'
+import {sendMsg, getMsgList, recvMsg} from '../../redux/chat.redux.js'
+import {getChatId} from '../../unit'
 
 const socket = io('ws://localhost:9093')
 
 @connect(
   state => state,
   {
-    sendMsg
+    sendMsg,
+    getMsgList,
+    recvMsg
   }
 )
 class Chat extends React.Component {
@@ -22,11 +25,11 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
-    // socket.on('recvmsg', (data) => {
-    //   this.setState({
-    //     msg: [...this.state.msg, data.text]
-    //   })
-    // })
+    // 加多此处判断是为了防止多次绑定和获取数据，且在此处需要做这一步是因为除了外面需要获取未读数外，里面也需要获取初始值
+    if (!this.props.chat.chatmsg.length) {
+      this.props.getMsgList()
+      this.props.recvMsg()
+    }
   }
 
   handleSubmit() {
@@ -40,8 +43,15 @@ class Chat extends React.Component {
   }
 
   render() {
-    const user = this.props.match.params.user
+    const userid = this.props.match.params.user
     const Item = List.Item
+    const users = this.props.chat.users
+    if (!users[userid]) {
+      return null
+    }
+    const chatid = getChatId(userid, this.props.user._id)
+    const chatmsgs = this.props.chat.chatmsg.filter(v => v.chatid === chatid)
+
     return (
       <div id='chat-page'>
         <NavBar
@@ -51,17 +61,23 @@ class Chat extends React.Component {
             this.props.history.goBack()
           }}
         >
-          {user}
+          {users[userid].name}
         </NavBar>
 
-        {this.props.chat.chatmsg.map(v => {
-          return v.from === user ? (
+        {chatmsgs.map(v => {
+
+          return v.from === userid ? (
             <List key={v._id}>
-              <Item>{v.content}</Item>
+              <Item
+                thumb={require(`../img/${users[v.from].avatar}.jpeg`)}
+              >{v.content}</Item>
             </List>
           ) : (
             <List key={v._id}>
-              <Item className='chat-me'>{v.content}</Item>
+              <Item
+                extra={<img src={require(`../img/${users[v.from].avatar}.jpeg`)}/>}
+                className='chat-me'
+              >{v.content}</Item>
             </List>
           )
         })}

@@ -21,8 +21,11 @@ function Msg() {
 )
 class DashBoard extends React.Component {
   componentDidMount() {
-    this.props.getMsgList()
-    this.props.recvMsg()
+    // 加多此处判断是为了防止多次绑定和获取数据
+    if (this.props.chat.chatmsg.length <= 0) {
+      this.props.getMsgList()
+      this.props.recvMsg()
+    }
   }
 
   render() {
