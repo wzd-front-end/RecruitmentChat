@@ -1,6 +1,6 @@
 import React from 'react'
 import io from 'socket.io-client'
-import {List, InputItem, NavBar, Icon} from 'antd-mobile'
+import {List, InputItem, NavBar, Icon, Grid} from 'antd-mobile'
 import {connect} from 'react-redux'
 import {sendMsg, getMsgList, recvMsg, changeScroll} from '../../redux/chat.redux.js'
 import {getChatId} from '../../unit'
@@ -32,11 +32,13 @@ class Chat extends React.Component {
       this.props.getMsgList()
       this.props.recvMsg()
     }
+    // 解决Grid组件存在的初始化问题
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'))
+    }, 0)
   }
 
   handleSubmit() {
-    // socket.emit('sendmsg', { text: this.state.text })
-    // this.setState({ text: '' })
     const from = this.props.user._id
     const to = this.props.match.params.user
     const msg = this.state.text
@@ -45,6 +47,11 @@ class Chat extends React.Component {
   }
 
   render() {
+    const emoji = '😀 😃 😄 😁 😁 😁 🤣 😂 😃 😃 😉 😊 😇 😍 🤩 😘 😗 ☺ 😚 😙 😋 😋 😜 🤪 😝 🤑 🤗 🤭 🤫 🤫 🤨 🤐 😐 😑'
+      .split(' ')
+      .filter(v => v)
+      .map(v => ({text: v}))
+
     const userid = this.props.match.params.user
     const Item = List.Item
     const users = this.props.chat.users
@@ -104,6 +111,12 @@ class Chat extends React.Component {
               extra={<span onClick={() => this.handleSubmit()}>发送</span>}
             ></InputItem>
           </List>
+          <Grid
+            data={emoji}
+            columnNum={8}
+            carouselMaxRow={4}
+            isCarousel={true}
+          />
         </div>
       </div>
     )
