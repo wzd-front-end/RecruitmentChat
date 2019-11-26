@@ -44,6 +44,10 @@
     margin-top: 0;
 }
 
+#chat-page .am-list-item .am-input-extra {
+    overflow: visible;
+}
+
 .stick-footer {
     z-index: 10;
     position: fixed;
