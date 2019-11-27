@@ -37,6 +37,9 @@ class Chat extends React.Component {
       this.props.getMsgList()
       this.props.recvMsg()
     }
+  }
+
+  componentWillUnmount() {
     this.props.readMsg(this.props.match.params.user)
   }
 
