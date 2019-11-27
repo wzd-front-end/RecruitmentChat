@@ -2,7 +2,7 @@ import React from 'react'
 import io from 'socket.io-client'
 import {List, InputItem, NavBar, Icon, Grid} from 'antd-mobile'
 import {connect} from 'react-redux'
-import {sendMsg, getMsgList, recvMsg, changeScroll} from '../../redux/chat.redux.js'
+import {sendMsg, getMsgList, recvMsg, changeScroll, readMsg} from '../../redux/chat.redux.js'
 import {getChatId} from '../../unit'
 
 const socket = io('ws://localhost:9093')
@@ -13,7 +13,8 @@ const socket = io('ws://localhost:9093')
     sendMsg,
     getMsgList,
     recvMsg,
-    changeScroll
+    changeScroll,
+    readMsg
   }
 )
 class Chat extends React.Component {
@@ -36,11 +37,11 @@ class Chat extends React.Component {
       this.props.getMsgList()
       this.props.recvMsg()
     }
-    // 解决Grid组件存在的初始化问题
-
+    this.props.readMsg(this.props.match.params.user)
   }
 
   fixCarousel() {
+    // 解决Grid组件存在的初始化问题
     setTimeout(() => {
       window.dispatchEvent(new Event('resize'))
     }, 0)
