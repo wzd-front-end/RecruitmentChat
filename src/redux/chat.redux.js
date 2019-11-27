@@ -56,8 +56,15 @@ export function getMsgList() {
   return (dispatch, getState) => {
     axios.get('/user/getmsglist').then(res => {
       if (res.status === 200 && res.data.code === 0) {
-        const userid = getState().user._id
-        dispatch(msgList(res.data.msgs, res.data.users, userid))
+        let userid = getState().user._id
+        if (userid) {
+          dispatch(msgList(res.data.msgs, res.data.users, userid))
+        } else {
+          setTimeout(() => {
+            userid = getState().user._id
+            dispatch(msgList(res.data.msgs, res.data.users, userid))
+          }, 100)
+        }
       }
     })
   }
