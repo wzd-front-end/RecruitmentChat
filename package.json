@@ -2,7 +2,7 @@
   "name": "recruitment",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:9093",
+  "proxy": "http://192.168.10.56:9093",
   "dependencies": {
     "@babel/core": "7.6.0",
     "@svgr/webpack": "4.3.2",
