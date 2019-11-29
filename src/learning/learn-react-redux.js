@@ -14,6 +14,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+function bindActionCreator(creator, dispatch) {
+  return (...args) => dispatch(creator(...args))
+}
+
+function bindActionCreators(creators, dispatch) {
+  let bound = {}
+  if (typeof creators === 'object') {
+    Object.keys(creators).forEach(v => {
+      let creator = creators[v]
+      bound[v] = bindActionCreator(creator, dispatch)
+    })
+  } else if (typeof creators === 'function') {
+    bound = creators(dispatch)
+    if (typeof bound !== 'object') {
+      throw new Error(`the parameter of connect which name is ${creators.name} must return an object`)
+      return
+    }
+  }
+  return bound
+}
+
 export const connect = (mapStateToProps = state => state, mapDispatchToProps = {}) => (WrapComponent) => {
   return class ConnectComponent extends React.Component {
     static contextTypes = {
@@ -28,16 +49,24 @@ export const connect = (mapStateToProps = state => state, mapDispatchToProps = {
     }
 
     componentDidMount() {
+      const {store} = this.context
+      // 疑问，每次执行都去增加一个新的函数，是否会导致同个update存在多次的情况？
+      store.subscribe(() => {
+        this.update()
+      })
       this.update()
     }
 
     update() {
       const {store} = this.context
       const stateProps = mapStateToProps(store.getState(), this.props)
+      const dispatchProps = bindActionCreators(mapDispatchToProps, store.dispatch)
+
       this.setState({
         props: {
+          ...this.state.props,
           ...stateProps,
-          ...this.state.props
+          ...dispatchProps
         }
       })
     }
