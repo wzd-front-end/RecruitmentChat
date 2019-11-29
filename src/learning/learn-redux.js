@@ -25,7 +25,7 @@ export function createStore(reducer, enhancer) {
   return {getState, subscribe, dispatch}
 }
 
-export function applyMiddleware(middleware) {
+export function applyMiddleware(...middlewares) {
   return createStore => (...args) => {
     const store = createStore(...args)
     let dispatch = store.dispatch
@@ -34,12 +34,25 @@ export function applyMiddleware(middleware) {
       getState: store.getState,
       dispatch: (...argus) => dispatch(...argus)
     }
-    dispatch = middleware(midApi)(store.dispatch)
+    const middlewareChain = middlewares.map(middleware => middleware(midApi))
+    dispatch = compose(...middlewareChain)(store.dispatch)
     return {
       ...store,
       dispatch
     }
   }
+}
+
+export function compose(...funs) {
+  if (funs.length === 0) {
+    return args => args
+  }
+
+  if (funs.length === 1) {
+    return funs[0]
+  }
+
+  funs.reduce((ret, item) => (...args) => ret(item(...args)))
 }
 
 
