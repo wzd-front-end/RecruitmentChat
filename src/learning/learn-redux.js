@@ -52,7 +52,28 @@ export function compose(...funs) {
     return funs[0]
   }
 
-  funs.reduce((ret, item) => (...args) => ret(item(...args)))
+  return funs.reduce((ret, item) => (...args) => ret(item(...args)))
+}
+
+function bindActionCreator(creator, dispatch) {
+  return (...args) => dispatch(creator(...args))
+}
+
+ export function bindActionCreators(creators, dispatch) {
+  let bound = {}
+  if (typeof creators === 'object') {
+    Object.keys(creators).forEach(v => {
+      let creator = creators[v]
+      bound[v] = bindActionCreator(creator, dispatch)
+    })
+  } else if (typeof creators === 'function') {
+    bound = creators(dispatch)
+    if (typeof bound !== 'object') {
+      throw new Error(`the parameter of connect which name is ${creators.name} must return an object`)
+      return
+    }
+  }
+  return bound
 }
 
 

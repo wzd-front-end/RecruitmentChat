@@ -13,30 +13,16 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+import { bindActionCreators } from './learn-redux'
 
-function bindActionCreator(creator, dispatch) {
-  return (...args) => dispatch(creator(...args))
-}
 
-function bindActionCreators(creators, dispatch) {
-  let bound = {}
-  if (typeof creators === 'object') {
-    Object.keys(creators).forEach(v => {
-      let creator = creators[v]
-      bound[v] = bindActionCreator(creator, dispatch)
-    })
-  } else if (typeof creators === 'function') {
-    bound = creators(dispatch)
-    if (typeof bound !== 'object') {
-      throw new Error(`the parameter of connect which name is ${creators.name} must return an object`)
-      return
-    }
-  }
-  return bound
+
+function getDisplayName(WrappedComponent) {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component'
 }
 
 export const connect = (mapStateToProps = state => state, mapDispatchToProps = {}) => (WrapComponent) => {
-  return class ConnectComponent extends React.Component {
+  class ConnectComponent extends React.Component {
     static contextTypes = {
       store: PropTypes.object
     }
@@ -49,8 +35,8 @@ export const connect = (mapStateToProps = state => state, mapDispatchToProps = {
     }
 
     componentDidMount() {
-      const {store} = this.context
-      // 疑问，每次执行都去增加一个新的函数，是否会导致同个update存在多次的情况？
+      const { store } = this.context
+      // 这里需要主要，组件销毁的时候，需要去除事件监听，所以还需要调用unsubscribe
       store.subscribe(() => {
         this.update()
       })
@@ -58,7 +44,7 @@ export const connect = (mapStateToProps = state => state, mapDispatchToProps = {
     }
 
     update() {
-      const {store} = this.context
+      const { store } = this.context
       const stateProps = mapStateToProps(store.getState(), this.props)
       const dispatchProps = bindActionCreators(mapDispatchToProps, store.dispatch)
 
@@ -75,6 +61,8 @@ export const connect = (mapStateToProps = state => state, mapDispatchToProps = {
       return <WrapComponent {...this.state.props}></WrapComponent>
     }
   }
+  ConnectComponent.displayName = `Connect(${getDisplayName(WrapComponent)})`
+  return ConnectComponent
 }
 
 // Provider，把store放到context里，所有的子元素可以直接取到store
@@ -84,7 +72,7 @@ export class Provider extends React.Component {
   }
 
   getChildContext() {
-    return {store: this.store}
+    return { store: this.store }
   }
 
   constructor(props, context) {
