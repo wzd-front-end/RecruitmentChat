@@ -1,11 +1,8 @@
 import React from 'react'
-import io from 'socket.io-client'
-import {List, InputItem, NavBar, Icon, Grid} from 'antd-mobile'
-import {connect} from 'react-redux'
-import {sendMsg, getMsgList, recvMsg, changeScroll, readMsg} from '../../redux/chat.redux.js'
-import {getChatId} from '../../unit'
-
-const socket = io('ws://localhost:9093')
+import { List, InputItem, NavBar, Icon, Grid } from 'antd-mobile'
+import { connect } from 'react-redux'
+import { sendMsg, getMsgList, recvMsg, changeScroll, readMsg } from '../../redux/chat.redux.js'
+import { getChatId } from '../../unit'
 
 @connect(
   state => state,
@@ -54,18 +51,17 @@ class Chat extends React.Component {
     const from = this.props.user._id
     const to = this.props.match.params.user
     const msg = this.state.text
-    this.props.sendMsg({from, to, msg})
-    this.setState({text: ''})
+    this.props.sendMsg({ from, to, msg })
+    this.setState({ text: '' })
   }
 
   render() {
     const emoji = '😀 😃 😄 😁 😁 😁 🤣 😂 😃 😃 😉 😊 😇 😍 🤩 😘 😗 ☺ 😚 😙 😋 😋 😜 🤪 😝 🤑 🤗 🤭 🤫 🤫 🤨 🤐 😐 😑'
       .split(' ')
       .filter(v => v)
-      .map(v => ({text: v}))
+      .map(v => ({ text: v }))
 
     const userid = this.props.match.params.user
-    const Item = List.Item
     const users = this.props.chat.users
     if (!users[userid]) {
       return null
@@ -78,7 +74,7 @@ class Chat extends React.Component {
         <div className='nav-block'>
           <NavBar
             mode='dark'
-            icon={<Icon type='left'/>}
+            icon={<Icon type='left' />}
             onLeftClick={() => {
               this.props.history.goBack()
             }}
@@ -92,7 +88,7 @@ class Chat extends React.Component {
             return v.from === userid ? (
               <div className='chat-message' key={v._id}>
                 <div className='avatar-block'>
-                  <img className='avatar-img' src={require(`../img/${users[v.from].avatar}.jpeg`)}/>
+                  <img className='avatar-img' alt='头像' src={require(`../img/${users[v.from].avatar}.jpeg`)} />
                 </div>
                 <div className='message-content bubble-left'>
                   <div className='bubble-block'>{v.content}</div>
@@ -100,16 +96,16 @@ class Chat extends React.Component {
                 <div className='avatar-block'></div>
               </div>
             ) : (
-              <div className='chat-message' key={v._id}>
-                <div className='avatar-block'></div>
-                <div className='message-content bubble-right'>
-                  <div className='bubble-block'>{v.content}</div>
+                <div className='chat-message' key={v._id}>
+                  <div className='avatar-block'></div>
+                  <div className='message-content bubble-right'>
+                    <div className='bubble-block'>{v.content}</div>
+                  </div>
+                  <div className='avatar-block'>
+                    <img className='avatar-img' alt='头像' src={require(`../img/${users[v.from].avatar}.jpeg`)} />
+                  </div>
                 </div>
-                <div className='avatar-block'>
-                  <img className='avatar-img' src={require(`../img/${users[v.from].avatar}.jpeg`)}/>
-                </div>
-              </div>
-            )
+              )
           })}
         </section>
         <div className='stick-footer'>
@@ -118,21 +114,22 @@ class Chat extends React.Component {
               placeholder='请输入'
               value={this.state.text}
               onChange={v => {
-                this.setState({text: v})
+                this.setState({ text: v })
               }}
               extra={
                 <div>
                   <span
-                    style={{marginRight: 15}}
+                    role='img'
+                    style={{ marginRight: 15 }}
                     onClick={() => {
-                      this.setState({showEmoji: !this.state.showEmoji})
+                      this.setState({ showEmoji: !this.state.showEmoji })
                       this.fixCarousel()
                     }}
                   >😀</span>
                   <span
                     onClick={() => {
                       this.handleSubmit()
-                      this.setState({showEmoji: false})
+                      this.setState({ showEmoji: false })
                     }}
                   >发送</span>
                 </div>

@@ -28,7 +28,7 @@ class AvatarSelector extends React.Component {
     const gridHeader = this.state.icon
       ? (<Flex align='center'>
         <span style={{ paddingRight: 8, lineHeight: '20px' }}>已选头像</span>
-        <img style={{ width: 20 }} src={this.state.icon} />
+        <img style={{ width: 20 }} src={this.state.icon} alt='已选头像' />
       </Flex>)
       : <span style={{ lineHeight: '20px' }}>请选择头像</span>
 
