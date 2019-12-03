@@ -14,10 +14,6 @@ import UserCard from "../usercard/usercard"
 )
 
 class Genius extends React.Component {
-  constructor() {
-    super(...arguments)
-  }
-
   componentDidMount() {
     this.props.getUserList('boss')
   }

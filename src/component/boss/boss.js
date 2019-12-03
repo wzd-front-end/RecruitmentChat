@@ -1,6 +1,6 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {getUserList} from "../../redux/chatuser.redux";
+import { connect } from 'react-redux'
+import { getUserList } from "../../redux/chatuser.redux";
 import UserCard from "../usercard/usercard"
 
 
@@ -15,10 +15,6 @@ import UserCard from "../usercard/usercard"
 )
 
 class Boss extends React.Component {
-  constructor() {
-    super(...arguments)
-  }
-
   componentDidMount() {
     this.props.getUserList('genius')
   }

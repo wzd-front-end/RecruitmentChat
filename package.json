@@ -2,7 +2,7 @@
   "name": "recruitment",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://192.168.10.56:9093",
+  "proxy": "http://localhost:9093",
   "dependencies": {
     "@babel/core": "7.6.0",
     "@svgr/webpack": "4.3.2",
@@ -81,7 +81,10 @@
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "jsx-a11y/accessible-emoji": ["off"]
+    }
   },
   "browserslist": {
     "production": [
