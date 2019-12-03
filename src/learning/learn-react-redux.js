@@ -10,22 +10,22 @@
 //     }
 //   }
 // }
+// 因为我们安装的react-redux是6.0b版本了，已经是采用新的context了
+// 所以我们需要修改我们的context实现方法，因为context是同一个对象的时候才可以祖孙组件访问，所以我们是没法在自己编写库和正式库进行混合使用
 
 import React from 'react'
-import PropTypes from 'prop-types'
-import { bindActionCreators } from './learn-redux'
-
-
+import {bindActionCreators} from './learn-redux'
 
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component'
 }
 
+const Context = React.createContext(null)
+
 export const connect = (mapStateToProps = state => state, mapDispatchToProps = {}) => (WrapComponent) => {
-  class ConnectComponent extends React.Component {
-    static contextTypes = {
-      store: PropTypes.object
-    }
+  return class ConnectComponent extends React.Component {
+    static contextType = Context
+    static displayName = `Connect(${getDisplayName(WrapComponent)})`
 
     constructor(props, context) {
       super(props, context)
@@ -35,16 +35,21 @@ export const connect = (mapStateToProps = state => state, mapDispatchToProps = {
     }
 
     componentDidMount() {
-      const { store } = this.context
-      // 这里需要主要，组件销毁的时候，需要去除事件监听，所以还需要调用unsubscribe
-      store.subscribe(() => {
+
+      const {store} = this.context
+      // 返回值为取消监听的函数，需要在组件销毁的时候注销掉
+      this.unsubscribe = store.subscribe(() => {
         this.update()
       })
       this.update()
     }
 
+    componentWillUnmount() {
+      this.unsubscribe()
+    }
+
     update() {
-      const { store } = this.context
+      const {store} = this.context
       const stateProps = mapStateToProps(store.getState(), this.props)
       const dispatchProps = bindActionCreators(mapDispatchToProps, store.dispatch)
 
@@ -61,26 +66,17 @@ export const connect = (mapStateToProps = state => state, mapDispatchToProps = {
       return <WrapComponent {...this.state.props}></WrapComponent>
     }
   }
-  ConnectComponent.displayName = `Connect(${getDisplayName(WrapComponent)})`
-  return ConnectComponent
 }
 
 // Provider，把store放到context里，所有的子元素可以直接取到store
 export class Provider extends React.Component {
-  static childContextTypes = {
-    store: PropTypes.object
+  constructor(props) {
+    super(props)
+    this.state = {
+      store: props.store
+    }
   }
-
-  getChildContext() {
-    return { store: this.store }
-  }
-
-  constructor(props, context) {
-    super(props, context)
-    this.store = props.store
-  }
-
   render() {
-    return this.props.children
+    return (<Context.Provider value={{store: this.state.store}}>{this.props.children}</Context.Provider>)
   }
 }

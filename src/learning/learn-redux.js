@@ -12,6 +12,10 @@ export function createStore(reducer, enhancer) {
 
   function subscribe(listener) {
     currentListeners.push(listener)
+    const unsubscribe = () => {
+      currentListeners = currentListeners.filter(v => v !== listener)
+    }
+    return unsubscribe
   }
 
   function dispatch(action) {
@@ -21,7 +25,7 @@ export function createStore(reducer, enhancer) {
   }
 
   // 目的是为了初始化的时候，currentState可以拿到初始值，注意这个type类型不要和用户同名，所以要命名复杂点
-  dispatch({type: '@WZD/LEARN-REDUX'})
+  dispatch({type: `@@redux/__INIT__${Math.random()}`})
   return {getState, subscribe, dispatch}
 }
 
@@ -59,7 +63,7 @@ function bindActionCreator(creator, dispatch) {
   return (...args) => dispatch(creator(...args))
 }
 
- export function bindActionCreators(creators, dispatch) {
+export function bindActionCreators(creators, dispatch) {
   let bound = {}
   if (typeof creators === 'object') {
     Object.keys(creators).forEach(v => {
@@ -70,21 +74,27 @@ function bindActionCreator(creator, dispatch) {
     bound = creators(dispatch)
     if (typeof bound !== 'object') {
       throw new Error(`the parameter of connect which name is ${creators.name} must return an object`)
-      return
     }
   }
   return bound
 }
 
+export function combineReducers(reducers) {
+  var reducerKeys = Object.keys(reducers)
+  return function combination(state, action) {
+    if (state === void 0) {
+      state = {}
+    }
+    var hasChanged = false;
+    var nextState = {};
+    for (var _i = 0; _i < reducerKeys.length; _i++) {
+      var _key = reducers[_i]
+      const previousStateForKey = state[_key]
+      const nextStateForKey = reducers[_key](previousStateForKey, action)
+      nextState[_key] = nextStateForKey
+      hasChanged = hasChanged || previousStateForKey !== nextStateForKey
+    }
 
-
-
-
-
-
-
-
-
-
-
-
+    return hasChanged ? nextState : state
+  }
+}
