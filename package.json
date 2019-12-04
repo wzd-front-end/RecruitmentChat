@@ -51,6 +51,7 @@
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "4.0.1",
     "prop-types": "^15.7.2",
+    "rc-queue-anim": "^1.8.3",
     "react": "^16.11.0",
     "react-app-polyfill": "^1.0.4",
     "react-dev-utils": "^9.1.0",
@@ -83,7 +84,9 @@
   "eslintConfig": {
     "extends": "react-app",
     "rules": {
-      "jsx-a11y/accessible-emoji": ["off"]
+      "jsx-a11y/accessible-emoji": [
+        "off"
+      ]
     }
   },
   "browserslist": {

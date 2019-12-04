@@ -64,6 +64,9 @@
 
 .chat-block {
     padding: 55px 0 45px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: 100%;
 }
 
 .chat-message {

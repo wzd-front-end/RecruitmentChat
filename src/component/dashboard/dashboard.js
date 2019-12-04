@@ -2,11 +2,12 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {NavBar} from 'antd-mobile'
 import NavLinkBar from '../navlink/navlink'
-import {Switch, Route} from 'react-router-dom'
+import {Redirect, Route} from 'react-router-dom'
 import Boss from '../../component/boss/boss'
 import Genius from '../../component/genius/genius'
 import User from '../../component/user/user'
 import Msg from '../../component/msg/msg'
+import QueueAnim from 'rc-queue-anim'
 import {getMsgList, recvMsg, changeScroll} from '../../redux/chat.redux.js'
 
 @connect(
@@ -55,25 +56,29 @@ class DashBoard extends React.Component {
         component: Msg
       },
       {
-        path: '/me',
+        path: '/personal',
         text: '我',
         icon: 'user',
         title: '个人中心',
         component: User
-      },
+      }
     ]
     const title = navList.find(v => v.path === pathname) ? navList.find(v => v.path === pathname).title : ''
+    const page = navList.find(v => v.path === pathname)
+    console.log(this.props.user)
+
     return (
       <div>
         <NavBar className='fixd-header' mode='dard'>{title}</NavBar>
         <div style={{marginTop: 45}}>
-          <Switch>
-            {
-              navList.map(v => (
-                <Route key={v.path} path={v.path} component={v.component}></Route>
-              ))
+          <QueueAnim type='alpha' duration={500}>
+            {pathname === '/' ?
+              (<Route path='/'>
+                <Redirect to='/personal'></Redirect>
+              </Route>)
+              : <Route key={page.path} path={page.path} component={page.component}></Route>
             }
-          </Switch>
+          </QueueAnim>
         </div>
         <NavLinkBar data={navList}></NavLinkBar>
       </div>

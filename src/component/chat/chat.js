@@ -1,8 +1,9 @@
 import React from 'react'
-import { List, InputItem, NavBar, Icon, Grid } from 'antd-mobile'
-import { connect } from 'react-redux'
-import { sendMsg, getMsgList, recvMsg, changeScroll, readMsg } from '../../redux/chat.redux.js'
-import { getChatId } from '../../unit'
+import {List, InputItem, NavBar, Icon, Grid} from 'antd-mobile'
+import {connect} from 'react-redux'
+import {sendMsg, getMsgList, recvMsg, changeScroll, readMsg} from '../../redux/chat.redux.js'
+import {getChatId} from '../../unit'
+import QueueAnim from 'rc-queue-anim'
 
 @connect(
   state => state,
@@ -26,10 +27,7 @@ class Chat extends React.Component {
   componentDidMount() {
     // 加多此处判断是为了防止多次绑定和获取数据，且在此处需要做这一步是因为除了外面需要获取未读数外，里面也需要获取初始值
     this.props.changeScroll(1)
-    // 解决进入聊天界面没有自动滚动到底部的问题
-    setTimeout(function () {
-      window.scrollTo(0, document.documentElement.scrollHeight)
-    }, 0)
+    this.focusInput()
     if (!this.props.chat.chatmsg.length) {
       this.props.getMsgList()
       this.props.recvMsg()
@@ -51,15 +49,22 @@ class Chat extends React.Component {
     const from = this.props.user._id
     const to = this.props.match.params.user
     const msg = this.state.text
-    this.props.sendMsg({ from, to, msg })
-    this.setState({ text: '' })
+    this.props.sendMsg({from, to, msg})
+    this.setState({text: ''})
+  }
+
+  // 解决进入聊天界面没有自动滚动到底部的问题
+  focusInput = () => {
+    setTimeout(function () {
+      window.scrollTo(0, document.documentElement.scrollHeight)
+    }, 100)
   }
 
   render() {
     const emoji = '😀 😃 😄 😁 😁 😁 🤣 😂 😃 😃 😉 😊 😇 😍 🤩 😘 😗 ☺ 😚 😙 😋 😋 😜 🤪 😝 🤑 🤗 🤭 🤫 🤫 🤨 🤐 😐 😑'
       .split(' ')
       .filter(v => v)
-      .map(v => ({ text: v }))
+      .map(v => ({text: v}))
 
     const userid = this.props.match.params.user
     const users = this.props.chat.users
@@ -74,7 +79,7 @@ class Chat extends React.Component {
         <div className='nav-block'>
           <NavBar
             mode='dark'
-            icon={<Icon type='left' />}
+            icon={<Icon type='left'/>}
             onLeftClick={() => {
               this.props.history.goBack()
             }}
@@ -83,29 +88,32 @@ class Chat extends React.Component {
           </NavBar>
         </div>
         <section className='chat-block'>
-
           {chatmsgs.map(v => {
             return v.from === userid ? (
-              <div className='chat-message' key={v._id}>
-                <div className='avatar-block'>
-                  <img className='avatar-img' alt='头像' src={require(`../img/${users[v.from].avatar}.jpeg`)} />
+              <QueueAnim interval={0} type='left' key={v._id}>
+                <div className='chat-message' key={v._id}>
+                  <div className='avatar-block'>
+                    <img className='avatar-img' alt='头像' src={require(`../img/${users[v.from].avatar}.jpeg`)}/>
+                  </div>
+                  <div className='message-content bubble-left'>
+                    <div className='bubble-block'>{v.content}</div>
+                  </div>
+                  <div className='avatar-block'></div>
                 </div>
-                <div className='message-content bubble-left'>
-                  <div className='bubble-block'>{v.content}</div>
-                </div>
-                <div className='avatar-block'></div>
-              </div>
+              </QueueAnim>
             ) : (
+              <QueueAnim interval={0} type='right' key={v._id}>
                 <div className='chat-message' key={v._id}>
                   <div className='avatar-block'></div>
                   <div className='message-content bubble-right'>
                     <div className='bubble-block'>{v.content}</div>
                   </div>
                   <div className='avatar-block'>
-                    <img className='avatar-img' alt='头像' src={require(`../img/${users[v.from].avatar}.jpeg`)} />
+                    <img className='avatar-img' alt='头像' src={require(`../img/${users[v.from].avatar}.jpeg`)}/>
                   </div>
                 </div>
-              )
+              </QueueAnim>
+            )
           })}
         </section>
         <div className='stick-footer'>
@@ -114,22 +122,24 @@ class Chat extends React.Component {
               placeholder='请输入'
               value={this.state.text}
               onChange={v => {
-                this.setState({ text: v })
+                this.setState({text: v})
               }}
+              onFocus={this.focusInput}
+              onBlur={this.focusInput}
               extra={
                 <div>
                   <span
                     role='img'
-                    style={{ marginRight: 15 }}
+                    style={{marginRight: 15}}
                     onClick={() => {
-                      this.setState({ showEmoji: !this.state.showEmoji })
+                      this.setState({showEmoji: !this.state.showEmoji})
                       this.fixCarousel()
                     }}
                   >😀</span>
                   <span
                     onClick={() => {
                       this.handleSubmit()
-                      this.setState({ showEmoji: false })
+                      this.setState({showEmoji: false})
                     }}
                   >发送</span>
                 </div>
