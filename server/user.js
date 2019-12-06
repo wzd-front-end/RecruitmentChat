@@ -1,11 +1,13 @@
-const express = require('express')
-const utils = require('utility')
+import express from 'express'
+import utils from 'utility'
+import model from './model'
 
 const Router = express.Router()
-const model = require('./model')
 const User = model.getModel('user')
 const Chat = model.getModel('chat')
 const _filter = {'pwd': 0, '__v': 0}
+
+
 
 Router.get('/list', function (req, res) {
   // 路由拼接问号传参使用query获取，json传参通过body获取
@@ -70,7 +72,6 @@ Router.post('/login', function (req, res) {
 })
 
 Router.post('/register', function (req, res) {
-  console.log(req.body)
   const {user, pwd, type} = req.body
   User.findOne({user}, function (err, doc) {
     if (doc) {

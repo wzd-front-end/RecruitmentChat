@@ -65,7 +65,6 @@ class DashBoard extends React.Component {
     ]
     const title = navList.find(v => v.path === pathname) ? navList.find(v => v.path === pathname).title : ''
     const page = navList.find(v => v.path === pathname)
-    console.log(this.props.user)
 
     return (
       <div>
