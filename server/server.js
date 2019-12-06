@@ -33,9 +33,9 @@ app.use(function (req, res, next) {
   if (req.url.startsWith('/user/') || req.url.startsWith('/static/')) {
     return next()
   }
-  return res.sendFile(path.resolve('../build/index.html'))
+  return res.sendFile(path.resolve('build/index.html'))
 })
-app.use('/', express.static(path.resolve('../build')))
+app.use('/', express.static(path.resolve('build')))
 
 server.listen(9093, function () {
   console.log('Node app start at port 9093')
