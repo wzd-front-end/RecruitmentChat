@@ -6,9 +6,21 @@ import Login from "./container/login/login";
 import Register from "./container/register/register";
 import Chat from "./component/chat/chat";
 import DashBoard from "./component/dashboard/dashboard";
-import {Route, Switch} from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 
 class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      hasError: false
+    }
+  }
+  componentDidCatch(err, info){
+    console.log(err,info)
+    this.setState({
+      hasError: true
+    })
+  }
   render() {
     return (
       <div>

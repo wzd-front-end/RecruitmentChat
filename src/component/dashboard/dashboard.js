@@ -1,14 +1,14 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {NavBar} from 'antd-mobile'
+import { connect } from 'react-redux'
+import { NavBar } from 'antd-mobile'
 import NavLinkBar from '../navlink/navlink'
-import {Redirect, Route} from 'react-router-dom'
+import { Redirect, Route } from 'react-router-dom'
 import Boss from '../../component/boss/boss'
 import Genius from '../../component/genius/genius'
 import User from '../../component/user/user'
 import Msg from '../../component/msg/msg'
 import QueueAnim from 'rc-queue-anim'
-import {getMsgList, recvMsg, changeScroll} from '../../redux/chat.redux.js'
+import { getMsgList, recvMsg, changeScroll } from '../../redux/chat.redux.js'
 
 @connect(
   state => state,
@@ -30,7 +30,7 @@ class DashBoard extends React.Component {
 
   render() {
     const user = this.props.user
-    const {pathname} = this.props.location
+    const { pathname } = this.props.location
     const navList = [
       {
         path: '/boss',
@@ -63,19 +63,17 @@ class DashBoard extends React.Component {
         component: User
       }
     ]
-    const title = navList.find(v => v.path === pathname) ? navList.find(v => v.path === pathname).title : ''
     const page = navList.find(v => v.path === pathname)
+    const title = page ? page.title : ''
+
 
     return (
       <div>
         <NavBar className='fixd-header' mode='dard'>{title}</NavBar>
-        <div style={{marginTop: 45}}>
+        <div style={{ marginTop: 45 }}>
           <QueueAnim type='alpha' duration={500}>
-            {pathname === '/' ?
-              (<Route path='/'>
-                <Redirect to='/personal'></Redirect>
-              </Route>)
-              : <Route key={page.path} path={page.path} component={page.component}></Route>
+            {
+              page ? <Route key={page.path} path={page.path} component={page.component}></Route> : <Redirect to='/personal'></Redirect>
             }
           </QueueAnim>
         </div>

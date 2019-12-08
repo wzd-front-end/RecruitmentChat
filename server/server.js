@@ -100,7 +100,6 @@ app.use(function (req, res, next) {
      ${scriptStr}
     </body>
   </html>`
-
   res.send(pageHtml)
   // return res.sendFile(path.resolve('build/index.html'))
 })
