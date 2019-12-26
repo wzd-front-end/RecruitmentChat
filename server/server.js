@@ -14,13 +14,13 @@ assethook({
 })
 
 import React from 'react'
-import { createStore, applyMiddleware, compose } from 'redux'
+import {createStore, applyMiddleware, compose} from 'redux'
 import thunk from 'redux-thunk'
-import { Provider } from 'react-redux'
-import { StaticRouter } from "react-router-dom"
+import {Provider} from 'react-redux'
+import {StaticRouter} from "react-router-dom"
 import App from '../src/app'
 import reducers from '../src/reducer'
-import { renderToString } from 'react-dom/server'
+import {renderToString} from 'react-dom/server'
 import staticPath from '../build/asset-manifest.json'
 
 
@@ -34,10 +34,12 @@ const Chat = model.getModel('chat')
 io.on('connection', function (socket) {
   console.log('user login')
   // 注意这里使用socket,表示当前连接的请求，io是全局二点请求
+  console.log('socket', socket.id)
   socket.on('sendmsg', function (data) {
-    const { from, to, msg } = data
+    console.log('io.sockets', io.sockets.sockets)
+    const {from, to, msg} = data
     const chatid = [from, to].sort().join('_')
-    Chat.create({ chatid, from, to, content: msg, create_time: new Date().getTime() }, function (err, doc) {
+    Chat.create({chatid, from, to, content: msg, create_time: new Date().getTime()}, function (err, doc) {
       io.emit('recvmsg', Object.assign({}, doc._doc))
     })
   })
@@ -108,3 +110,4 @@ app.use('/', express.static(path.resolve('build')))
 server.listen(9093, function () {
   console.log('Node app start at port 9093')
 })
+

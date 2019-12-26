@@ -12,7 +12,6 @@ class User extends React.Component {
   constructor() {
     super(...arguments)
     this.logout = this.logout.bind(this)
-    console.log(this.props)
   }
 
   logout() {
