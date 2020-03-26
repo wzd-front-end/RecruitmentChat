@@ -32,11 +32,10 @@ const model = require('./model')
 const Chat = model.getModel('chat')
 
 io.on('connection', function (socket) {
-  console.log('user login')
+
   // 注意这里使用socket,表示当前连接的请求，io是全局二点请求
-  console.log('socket', socket.id)
+
   socket.on('sendmsg', function (data) {
-    console.log('io.sockets', io.sockets.sockets)
     const {from, to, msg} = data
     const chatid = [from, to].sort().join('_')
     Chat.create({chatid, from, to, content: msg, create_time: new Date().getTime()}, function (err, doc) {

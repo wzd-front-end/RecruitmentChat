@@ -8,6 +8,7 @@ import Genius from '../../component/genius/genius'
 import User from '../../component/user/user'
 import Msg from '../../component/msg/msg'
 import QueueAnim from 'rc-queue-anim'
+import Test from '../../component/test/test'
 import { getMsgList, recvMsg, changeScroll } from '../../redux/chat.redux.js'
 
 @connect(
@@ -62,6 +63,13 @@ class DashBoard extends React.Component {
         title: '个人中心',
         component: User
       }
+      // {
+      //   path: '/test',
+      //   text: '测试',
+      //   icon: 'user',
+      //   title: '测试',
+      //   component: Test
+      // }
     ]
     const page = navList.find(v => v.path === pathname)
     const title = page ? page.title : ''
