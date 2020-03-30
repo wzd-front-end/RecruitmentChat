@@ -62,14 +62,14 @@ class DashBoard extends React.Component {
         icon: 'user',
         title: '个人中心',
         component: User
+      },
+      {
+        path: '/test',
+        text: '测试',
+        icon: 'user',
+        title: '测试',
+        component: Test
       }
-      // {
-      //   path: '/test',
-      //   text: '测试',
-      //   icon: 'user',
-      //   title: '测试',
-      //   component: Test
-      // }
     ]
     const page = navList.find(v => v.path === pathname)
     const title = page ? page.title : ''

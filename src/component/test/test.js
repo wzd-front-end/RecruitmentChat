@@ -1,40 +1,31 @@
-import React from 'react'
+import React, {Component} from 'react'
+import {kFormCreate} from "../kFormCreate/kFormCreate";
 
-class Test1 extends React.Component{
-  constructor(){
-    super(...arguments)
-  }
-
-  clickTest = (e) => {
-    console.log('Test1冒泡')
-  }
-
-  clickCapture = () => {
-    console.log('Test1捕获')
-  }
+@kFormCreate
+class KFormTest extends Component {
+  onSubmit = () => {
+    this.props.validate((isValid, data) => {
+      if (isValid) {
+        console.log("提交登录", data);
+      } else {
+        alert("校验失败");
+      }
+    });
+  };
   render() {
-    return (<div onClick={this.clickTest} onClickCapture={this.clickCapture}><Test2></Test2></div>)
-  }
-}
-
-class Test2 extends React.Component{
-  constructor(){
-    super(...arguments)
-  }
-  componentDidMount() {
-
-  }
-
-  clickTest = (e) => {
-    console.log('Test2冒泡')
-  }
-
-  clickCapture = () => {
-    console.log('Test2捕获')
-  }
-
-  render() {
-    return <div data-num='33' onClick={this.clickTest} onClickCapture={this.clickCapture}>测试事件捕获和事件冒泡</div>
+// 结构出扩展的方法
+    const { getFieldDec } = this.props;
+    return (
+      <div>
+        {getFieldDec("uname", {
+          rules: [{ required: true, message: "请输入用户名" }]
+        })(<input type="text" />)}
+        {getFieldDec("pwd", {
+          rules: [{ required: true, message: "请输入密码" }]
+        })(<input type="password" />)}
+        <button onClick={this.onSubmit}>登录</button>
+      </div>
+    );
   }
 }
 
@@ -42,7 +33,7 @@ class Test extends React.Component{
   render() {
     return (
       <div>
-        <Test1></Test1>
+        <KFormTest></KFormTest>
       </div>
     )
   }
