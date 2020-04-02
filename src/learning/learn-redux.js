@@ -19,6 +19,7 @@ export function createStore(reducer, enhancer) {
   }
 
   function dispatch(action) {
+    // 这里说明了为什么reducer需要返回全新得状态，因为是对老状态的覆盖
     currentState = reducer(currentState, action)
     currentListeners.forEach(v => v())
     return action
@@ -88,7 +89,7 @@ export function combineReducers(reducers) {
     var hasChanged = false;
     var nextState = {};
     for (var _i = 0; _i < reducerKeys.length; _i++) {
-      var _key = reducers[_i]
+      var _key = reducerKeys[_i]
       const previousStateForKey = state[_key]
       const nextStateForKey = reducers[_key](previousStateForKey, action)
       nextState[_key] = nextStateForKey
