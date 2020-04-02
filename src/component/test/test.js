@@ -29,66 +29,11 @@ class KFormTest extends Component {
     }
 }
 
-class Test1 extends React.Component{
-  constructor(){
-    super(...arguments)
-  }
-
-  componentWillMount() {
-    console.log("componentWillMount")
-  }
-
-  componentDidMount() {
-    console.log("componentDidMount")
-  }
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    console.log("componentWillReceiveProps")
-  }
-
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    console.log("shouldComponentUpdate")
-    return true
-  }
-
-  componentWillUpdate(nextProps, nextState, nextContext) {
-    console.log("componentWillUpdate")
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log("componentDidUpdate")
-  }
-
-  componentWillUnmount() {
-    console.log("componentWillUnmount")
-  }
-
-  render() {
-    console.log("render")
-    return(
-      <div>测试生命周期</div>
-    )
-  }
-}
-
 class Test extends React.Component{
-  constructor(){
-    super(...arguments)
-    this.state = {
-      count: 1
-    }
-  }
-  handleChange = e => {
-    this.setState({
-      count: this.state.count + 1
-    })
-  }
   render() {
     return (
       <div>
-        {this.state.count}
-        <Test1></Test1>
-        <button onClick={this.handleChange}>+</button>
+        <KFormTest></KFormTest>
       </div>
     )
   }
