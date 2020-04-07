@@ -33,7 +33,7 @@ class Test extends React.Component{
   render() {
     return (
       <div>
-        <KFormTest></KFormTest>
+        <KFormTest></KFormTest>.
       </div>
     )
   }
