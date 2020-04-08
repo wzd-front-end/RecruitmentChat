@@ -56,6 +56,9 @@ export function compose(...funs) {
   if (funs.length === 1) {
     return funs[0]
   }
+  /** [f1 , f2, f3]，执行顺序是f1(f2(f3()))()，先执行内括号的，之后再往外执行，执行完内括号的后，会返回一个封装了里层需要执行的特有逻辑的next函数，返回给外层的中间件
+   *  一层一层的封装直到最外层f1，最后大概是 (...args) => f1(f2(f3(args)))的形式，然后将dispatch传入作为最里层的next，执行f1，这过程next()会不断往里层执行,直到最里层next === dispatch
+   */
 
   return funs.reduce((ret, item) => (...args) => ret(item(...args)))
 }
